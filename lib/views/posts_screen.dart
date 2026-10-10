@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_state.dart';
-import '../models/post_model.dart';
+import '../widgets/no_internet_widget.dart';
 import '../widgets/posts_list_view.dart';
 import '../widgets/posts_search.dart';
 import 'add_post_screen.dart';
@@ -94,6 +94,8 @@ class PostsScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state is HomeSuccess) {
             return PostsListView(posts: state.posts);
+          } else if (state is HomeNoInternet) {
+            return NoInternet();
           } else if (state is HomeFailure) {
             return RefreshIndicator(
               onRefresh: () async {
@@ -147,11 +149,9 @@ class PostsScreen extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const AddPostScreen()),
           );
         },
-
         backgroundColor: Colors.amberAccent,
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
 }
-

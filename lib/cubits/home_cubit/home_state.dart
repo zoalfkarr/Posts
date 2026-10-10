@@ -15,3 +15,5 @@ class HomeFailure extends HomeState {
   final String errorMessage;
   HomeFailure({required this.errorMessage});
 }
+
+class HomeNoInternet extends HomeState {}

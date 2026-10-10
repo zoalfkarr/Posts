@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/post_model.dart';
@@ -9,11 +10,23 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<void> getAllPosts() async {
     emit(HomeLoading());
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult.contains(ConnectivityResult.none)) {
+      emit(HomeNoInternet());
+      return;
+    }
+
     try {
       List<PostModel> post = await AllPostService().getAllPosts();
       emit(HomeSuccess(posts: post));
     } catch (e) {
-      emit(HomeFailure(errorMessage: e.toString()));
+      if (e.toString().contains('SocketException') ||
+          e.toString().contains('Failed host lookup')) {
+        emit(HomeNoInternet());
+      } else {
+        emit(HomeFailure(errorMessage: e.toString()));
+      }
     }
   }
 }
